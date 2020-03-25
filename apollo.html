@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul id=list></ul>
+    <script>
+        var myRequest = new XMLHttpRequest();
+
+        function intoList() {
+            let parsedArticles = JSON.parse(myRequest.response);
+            console.log(parsedArticles);
+            
+            for (i = 0; i < parsedArticles.response.docs.length; i++) {
+                let newItem = document.createElement('li'); 
+                let newHeadline = document.createTextNode(parsedArticles.response.docs[i].headline.main);
+                let newSnippet = document.createTextNode(parsedArticles.response.docs[i].snippet); 
+                let newPubDate = document.createTextNode(parsedArticles.response.docs[i].pub_date); 
+
+                newItem.appendChild(newHeadline);
+                list.appendChild(newItem);
+                
+                let newInnerList = document.createElement('ul');
+                newInnerList.setAttribute('id', i);
+                list.appendChild(newInnerList);
+
+                let innerList = document.getElementById(i);
+
+                let newInnerItem1 = document.createElement('li');
+                newInnerItem1.appendChild(newSnippet);
+                innerList.appendChild(newInnerItem1);
+                
+                let newInnerItem2 = document.createElement('li');
+                newInnerItem2.appendChild(newPubDate);
+                innerList.appendChild(newInnerItem2);
+
+                let newInnerItem3 = document.createElement('li');
+                let newRef = document.createElement('a');
+                newRef.setAttribute('href', parsedArticles.response.docs[i].web_url);
+                newInnerItem3.appendChild(newRef);
+                let linkText = document.createTextNode('Read article');
+                newRef.appendChild(linkText);
+                innerList.appendChild(newInnerItem3);
+            }
+        }
+
+        myRequest.addEventListener("load", intoList);        
+        myRequest.open("GET", "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=apollo11&api-key=Rp0bAxC5f9MHnCtXHCDESRyvAz5t83KT");
+        myRequest.send();
+    </script>
+    
+</body>
+</html>
