@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <aside id="gifContainer"></aside>
+    <div id="mainView"></div>
+    <script>
+        var oReq = new XMLHttpRequest();
+
+        function createMainImg(element) {
+                mainView.innerHTML = '';
+                let newMainImg = document.createElement('img'); 
+                    newMainImg.setAttribute('src', element.getAttribute('alt'));
+                    mainView.appendChild(newMainImg);
+            }
+
+        function intoDiv() {
+            let parsedGifs = JSON.parse(oReq.response);
+            console.log(parsedGifs);
+            
+            for (i = 0; i < parsedGifs.data.length; i++) {
+                let newImg = document.createElement('img'); 
+                newImg.setAttribute('src', parsedGifs.data[i].images.fixed_height_small_still.url);
+                newImg.setAttribute('alt', parsedGifs.data[i].images.original.url)
+                newImg.setAttribute('onclick', 'createMainImg(this)');
+                gifContainer.appendChild(newImg);
+            }
+        }
+
+        oReq.addEventListener("load", intoDiv);        
+        //oReq.onload = intoDiv;
+        oReq.open("GET", "https://api.giphy.com/v1/gifs/search?api_key=2QT9fS5MoWwiB7efBnlaI5khMYzjqjgJ&q=cat&limit=16");
+        oReq.send();
+    
+    </script>
+    
+</body>
+</html>
+
